@@ -48,13 +48,16 @@ Designed as a production-grade, scalable, fault-tolerant system using Node.js, P
 ## Tech Stack
 
 ### Backend 
-- Node.js / NestJS
-- Python Worker
-- Redis (Streams / PubSub / Cache)
+- NestJS (TypeScript)
+- Kafka
+- Elasticsearch
+- WebSockets
 
 ### Frontend
 - React / Next.js
 - Tailwind CSS
+- WebSocket client
+- Simple dashboard
 
 ### DevOps
 - Docker + Docker Compose
