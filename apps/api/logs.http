@@ -1,0 +1,9 @@
+POST http://localhost:3000/logs
+Content-Type: application/json
+
+{
+  "timestamp": "2025-12-30T10:15:00.000Z",
+  "level": "error",
+  "service": "payment-service",
+  "message": "Payment failed"
+}
