@@ -2,10 +2,14 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Kafka } from 'kafkajs';
 import { CreateLogDto } from '../dto/create-log.dto';
 import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
+import { LogsGateway } from '../logs.gateway';
 
 @Injectable()
 export class KafkaConsumerService implements OnModuleInit {
-  constructor(private readonly elasticsearchService: ElasticsearchService) {}
+  constructor(
+    private readonly elasticsearchService: ElasticsearchService,
+    private readonly logsGateway: LogsGateway,
+  ) {}
   async onModuleInit() {
     const kafka = new Kafka({
       clientId: 'log-consumer',
@@ -20,6 +24,7 @@ export class KafkaConsumerService implements OnModuleInit {
         if (!value) return Promise.resolve();
         const log = JSON.parse(value) as CreateLogDto;
         await this.elasticsearchService.indexLog(log);
+        this.logsGateway.emitLog(log);
       },
     });
   }
