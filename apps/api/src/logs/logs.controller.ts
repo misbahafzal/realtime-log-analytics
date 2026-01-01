@@ -8,6 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateLogDto } from './dto/create-log.dto';
+import { QueryLogsDto } from './dto/query-logs.dto';
 import { KafkaService } from './kafka/kafka.service';
 import { LogsService } from './logs.service';
 
@@ -27,17 +28,7 @@ export class LogsController {
   }
 
   @Get()
-  async getLogs(
-    @Query()
-    query: {
-      service?: string;
-      level?: string;
-      from?: string;
-      to?: string;
-      page?: number;
-      limit?: number;
-    },
-  ) {
+  async getLogs(@Query() query: QueryLogsDto) {
     return this.logsService.queryLogs(query);
   }
 }

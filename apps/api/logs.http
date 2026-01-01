@@ -7,3 +7,13 @@ Content-Type: application/json
   "service": "payment-service",
   "message": "Payment failed"
 }
+
+### Get latest logs
+GET http://localhost:3000/logs?limit=10
+
+### Error logs
+GET http://localhost:3000/logs?level=error
+
+### Payment service logs
+GET http://localhost:3000/logs?service=payment-service&page=1&limit=5
+
