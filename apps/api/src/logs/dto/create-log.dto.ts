@@ -1,29 +1,21 @@
-import {
-  IsISO8601,
-  IsIn,
-  IsOptional,
-  IsString,
-  IsObject,
-} from 'class-validator';
+import { IsISO8601, IsIn, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateLogDto {
   @IsISO8601()
-  timestamp!: string;
+  timestamp: string;
 
-  @IsIn(['debug', 'info', 'warn', 'error'])
-  level!: 'debug' | 'info' | 'warn' | 'error';
-
-  @IsString()
-  service!: string;
+  @IsIn(['info', 'warn', 'error'])
+  level: 'info' | 'warn' | 'error';
 
   @IsString()
-  message!: string;
+  @IsNotEmpty()
+  service: string;
 
-  @IsOptional()
   @IsString()
-  traceId?: string;
+  @IsNotEmpty()
+  message: string;
 
-  @IsOptional()
-  @IsObject()
-  metadata?: Record<string, unknown>;
+  @IsString()
+  @IsNotEmpty()
+  traceId: string;
 }
