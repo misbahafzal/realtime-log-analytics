@@ -13,22 +13,26 @@ interface Log {
 
 const socket = io("http://localhost:3000");
 
-const LEVELS = ['info', 'warn', 'error'];
+const LEVELS = ["info", "warn", "error"];
 
 export default function LiveLogs() {
   const [logs, setLogs] = useState<Log[]>([]);
+  const [paused, setPaused] = useState(false);
   const [levelFilter, setLevelFilter] = useState<string>("all");
   const [serviceFilter, setServiceFilter] = useState<string>("all");
 
   useEffect(() => {
-    socket.on("log", (log: Log) => {
-      setLogs((prev) => [log, ...prev].slice(0, 100));
-    });
+    const handler = (log: Log) => {
+      if (paused) return;
+      setLogs((prev) => [log, ...prev].slice(0, 200));
+    };
+
+    socket.on("log", handler);
 
     return () => {
-      socket.off("log");
+      socket.off("log", handler);
     };
-  }, []);
+  }, [paused]);
   const services = Array.from(new Set(logs.map((l) => l.service)));
   const filteredLogs = logs.filter((log) => {
     if (levelFilter !== "all" && log.level !== levelFilter) return false;
@@ -38,7 +42,19 @@ export default function LiveLogs() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100 p-6">
-      <h1 className="text-2xl font-bold mb-4">🔴 Live Logs</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold mb-4">🔴 Live Logs</h1>
+        <button
+          onClick={() => setPaused((p) => !p)}
+          className={`px-4 py-2 rounded text-sm font-semibold border ${
+            paused
+              ? "bg-green-600 border-green-500"
+              : "bg-red-600 border-red-500"
+          }`}
+        >
+          {paused ? "Resume" : "Pause"}
+        </button>
+      </div>
 
       <div className="flex gap-4 mb-4">
         <select
